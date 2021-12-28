@@ -124,6 +124,12 @@
                             </button>
                         </div>
                         <div class="p-2"></div>
+                        <div class="btn-group p-2">
+                            <button id="btnVcard" class="btn btn-primary" name="downlaod-vcoard" type="button" disabled>
+                                Download vCard
+                            </button>
+                        </div>
+                        <div class="p-2"></div>
                         <div class="p-2">
                             <input class="form-check-input" type="checkbox" value="" id="chkIsSjis" checked/>
                             <label class="form-check-label" for="chkIsSjis">
@@ -137,26 +143,39 @@
         </div>
     </div>
     <script type="text/javascript">
+        /**
+         * getElementByIdする糖衣構文
+         * @param {string} text
+         */
         function _$(id) {
             return document.getElementById(id);
         }
 
+        /**
+         * querySelectorする糖衣構文
+         */
         function $$(query) {
             return document.querySelectorAll(query);
         }
 
+        /**
+         * 文字エンコードの変換
+         * @param {string} str エンコード変換して耐文字列
+         * @return {string} 変換後の文字列
+         */
         function encode(str) {
             return _$("chkIsSjis").checked
                 ? Encoding.convert(str, "SJIS")
-                : str;
+                : Encoding.convert(str, "UTF-8");
         }
 
+        // 画面の描画が終わったら初期設定を実行する
         window.onload = () => {
             _$("btnGen").addEventListener("click", e => {
-                // e.preventDefault()
-                const size = 200;
+                const size = 200; // QRコード画像のサイズ（縦横兼用）
                 let source = "";
 
+                // 表示しているタブによって取得する値を変える
                 switch ($$(".nav-link.active")[0].getAttribute("value")) {
                     case "free_text":
                         source = encode(_$("value").value);
@@ -173,65 +192,17 @@
                         break
 
                     case "vcard":
-                        const charset = _$("chkIsSjis").checked
-                            ? "CHARSET=UTF-8:"
-                            : "CHARSET=UTF-8:";
-
-                        const first_name = encode(_$("first_name").value)
-                        const family_name = encode(_$("family_name").value)
-                        const first_name_kana = encode(_$("first_name_kana").value)
-                        const family_name_kana = encode(_$("family_name_kana").value)
-                        const organization = encode(_$("organization").value)
-                        const title = encode(_$("title").value)
-                        const tel_voice = encode(_$("tel_voice").value)
-                        const tel_fax = encode(_$("tel_fax").value)
-                        const email = encode(_$("email").value)
-                        const url_work = encode(_$("url_work").value)
-                        const url_private = encode(_$("url_private").value)
-                        source = "BEGIN:VCARD\nVERSION:2.1\n"
-                        if (family_name || first_name) {
-                            source += `FN;${charset}${family_name} ${first_name}\n`
-                                + `N;${charset}${family_name};${first_name}\n`
-                        }
-                        if (family_name_kana || first_name_kana) {
-                            source += `SORT-STRING;${charset}${family_name_kana} ${first_name_kana}\n`
-                            if (family_name_kana) {
-                                source += `X-PHONETIC-LAST-NAME;${charset}${family_name_kana}\n`
-                            }
-                            if (first_name_kana) {
-                                source += `X-PHONETIC-FIRST-NAME;${charset}${first_name_kana}\n`
-                            }
-                        }
-                        if (organization) {
-                            source += `ORG;${charset}${organization}\n`
-                        }
-                        if (title) {
-                            source += `TITLE;${charset}${title}\n`
-                        }
-                        if (tel_voice) {
-                            source += `TEL;;VOICE:${tel_voice}\n`
-                        }
-                        if (tel_fax) {
-                            source += `TEL;;FAX:${tel_fax}\n`
-                        }
-                        if (email) {
-                            source += `EMAIL;;INTERNET:${email}\n`
-                        }
-                        if (url_work) {
-                            source += `URL;WORK:${url_work}\n`
-                        }
-                        if (url_private) {
-                            source += `URL;HOME:${url_private}\n`
-                        }
-                        source += "END:VCARD";
+                        source = encode(generateVcard());
                         break
                 }
                 console.log(source)
 
+                // QRコードの生成
                 try {
+                    const strlen = source.length;
                     $("#QRCode").html("").qrcode({
-                        width: size,
-                        height: size,
+                        width: strlen > size ? strlen : size,
+                        height: strlen > size ? strlen : size,
                         text: source,
                     });
                 } catch (e) {
@@ -239,6 +210,12 @@
                 }
             });
 
+            // vCardのダウンロード
+            _$("btnVcard").addEventListener("click", e => {
+                downloadVcardFile();
+            });
+
+            // タブの切替
             $$(".nav-link").forEach(nav_elem => {
                 nav_elem.addEventListener("click", event => {
                     $$(".nav-link").forEach(elem => {
@@ -249,9 +226,109 @@
                     })
                     event.target.classList.add("active")
                     _$(event.target.getAttribute("value")).classList.remove("d-none")
+
+                    if (event.target.getAttribute("value") === "vcard") {
+                        _$("btnVcard").disabled = false
+                    } else {
+                        _$("btnVcard").disabled = true
+                    }
                 })
             })
         }
+
+        /**
+         * vCard用の文字列の生成
+         * @returns {string}
+         */
+        function generateVcard() {
+            const charset = _$("chkIsSjis").checked
+                ? "CHARSET=SHIFT_JIS:"
+                : "CHARSET=UTF-8:";
+
+            const first_name = _$("first_name").value
+            const family_name = $("family_name").value
+            const first_name_kana = _$("first_name_kana").value
+            const family_name_kana = _$("family_name_kana").value
+            const organization = _$("organization").value
+            const title = _$("title").value
+            const tel_voice = _$("tel_voice").value
+            const tel_fax = _$("tel_fax").value
+            const email = _$("email").value
+            const url_work = _$("url_work").value
+            const url_private = _$("url_private").value
+
+            let source = "BEGIN:VCARD\nVERSION:2.1\n"
+            if (family_name || first_name) {
+                source += `FN;${charset}${family_name} ${first_name}\n`
+                    + `N;${charset}${family_name};${first_name}\n`
+            }
+            if (family_name_kana || first_name_kana) {
+                source += `SORT-STRING;${charset}${family_name_kana} ${first_name_kana}\n`
+                if (family_name_kana) {
+                    source += `X-PHONETIC-LAST-NAME;${charset}${family_name_kana}\n`
+                }
+                if (first_name_kana) {
+                    source += `X-PHONETIC-FIRST-NAME;${charset}${first_name_kana}\n`
+                }
+            }
+            if (organization) {
+                source += `ORG;${charset}${organization}\n`
+            }
+            if (title) {
+                source += `TITLE;${charset}${title}\n`
+            }
+            if (tel_voice) {
+                source += `TEL;;VOICE:${tel_voice}\n`
+            }
+            if (tel_fax) {
+                source += `TEL;;FAX:${tel_fax}\n`
+            }
+            if (email) {
+                source += `EMAIL;;INTERNET:${email}\n`
+            }
+            if (url_work) {
+                source += `URL;WORK:${url_work}\n`
+            }
+            if (url_private) {
+                source += `URL;HOME:${url_private}\n`
+            }
+            source += "END:VCARD";
+
+            return source;
+        }
+
+        /**
+         * vCardファイルのダウンロード
+         */
+        function downloadVcardFile() {
+            const charset = _$("chkIsSjis").checked
+                ? "CHARSET=SHIFT_JIS:"
+                : "CHARSET=UTF-8:";
+
+            // アンカータグの作成
+            const downLoadLink = document.createElement("a");
+
+            // ダウンロードするHTML文章の生成
+            const outputDataString = encode(stringToArray(generateVcard()));  // バイト列のまま渡す
+            const downloadFileName = (_$('title').value != "" ? _$('title').value : _$('first_name').value + _$('family_name').value) + ".vcf"
+            downLoadLink.download = downloadFileName;
+            downLoadLink.href = URL.createObjectURL(new Blob([new Uint8Array(outputDataString)], { type: `text/x-vcard` }));
+            downLoadLink.dataset.downloadurl = [`text/x-vcard`, downloadFileName, downLoadLink.href].join(":");
+            downLoadLink.click();
+        }
+
+        /**
+         * 文字列を配列に変換
+         * @param {string} str 配列に変換したい文字列
+         * @returns {Uint8Array} 配列
+         */
+        function stringToArray(str) {
+            let array = [];
+            for(let i = 0; i < str.length; i++) {
+                array.push(str.charCodeAt(i));
+            }
+            return array;
+        };
     </script>
 </body>
 
