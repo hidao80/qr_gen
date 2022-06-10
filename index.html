@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" href="img/logo.png">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -52,8 +53,7 @@
                         <div id="wifi" class="tab d-none">
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon13">ESSID</span>
-                                <input type="text" class="form-control" id="essid"
-                                    aria-describedby="basic-addon13" />
+                                <input type="text" class="form-control" id="essid" aria-describedby="basic-addon13" />
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addo14">Password</span>
@@ -98,8 +98,7 @@
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon9">Fax number</span>
-                                <input type="text" class="form-control" id="tel_fax"
-                                    aria-describedby="basic-addon9" />
+                                <input type="text" class="form-control" id="tel_fax" aria-describedby="basic-addon9" />
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon10">e-Mail address</span>
@@ -131,7 +130,7 @@
                         </div>
                         <div class="p-2"></div>
                         <div class="p-2">
-                            <input class="form-check-input" type="checkbox" value="" id="chkIsSjis" checked/>
+                            <input class="form-check-input" type="checkbox" value="" id="chkIsSjis" checked />
                             <label class="form-check-label" for="chkIsSjis">
                                 Shift-JIS mode
                             </label>
@@ -178,7 +177,8 @@
                 // 表示しているタブによって取得する値を変える
                 switch ($$(".nav-link.active")[0].getAttribute("value")) {
                     case "free_text":
-                        source = encode(_$("value").value);
+                        // source = encode(_$("value").value);
+                        source = _$("value").value;
                         break
 
                     case "url":
@@ -257,7 +257,7 @@
             const url_work = _$("url_work").value
             const url_private = _$("url_private").value
 
-            let source = "BEGIN:VCARD\nVERSION:2.1\n"
+            let source = "BEGIN:VCARD\nVERSION:3.0\n"
             if (family_name || first_name) {
                 source += `FN;${charset}${family_name} ${first_name}\n`
                     + `N;${charset}${family_name};${first_name}\n`
@@ -324,7 +324,7 @@
          */
         function stringToArray(str) {
             let array = [];
-            for(let i = 0; i < str.length; i++) {
+            for (let i = 0; i < str.length; i++) {
                 array.push(str.charCodeAt(i));
             }
             return array;
