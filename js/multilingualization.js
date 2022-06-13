@@ -1,9 +1,13 @@
-// ========================================
-// multilingualization
-// ========================================
-const multilingualization = {
-    // Multilingual dictionary object
-    __: {
+/**
+ * Multilingualization library class
+ *
+ * @class Multilingualization
+ */
+export default class Multilingualization {
+    /**
+     *  @var dictionaries Multilingual dictionary object
+     */
+    static dictionaries = {
         "en": {
             "dict-1": "Free text",
             "dict-2": "Wifi setup",
@@ -48,30 +52,40 @@ const multilingualization = {
             "dict-19": "Shift-JIS モード",
             "error-1": "文字数がオーバーしています。600文字以内でお願いします。"
         }
-    },
+    }
 
-    // Get language settings
-    language: v => {
+    /**
+     * Get current language
+     *
+     * @returns {string} Current language
+     */
+    static language() {
         const lang = (window.navigator.languages && window.navigator.languages[0]) ||
             window.navigator.language ||
             window.navigator.userLanguage ||
             window.navigator.browserLanguage;
 
         // Show English for undefined languages
-        return multilingualization.__[lang] ? lang : "en";
-    },
+        return this.dictionaries[lang] ? lang : "en";
+    }
 
-    // Get multilingual dictionary item value
-    dict: index => {
-        return multilingualization.__[multilingualization.language()][index];
-    },
+    /**
+     * Get translated term
+     *
+     * @param {string} term Term to be translated
+     * @returns {string} Translated term
+     */
+    static translate(index) {
+        return this.dictionaries[this.language()][index];
+    }
 
-    init: v => {
-        const dictionary = multilingualization.__[multilingualization.language()];
+    // Initialization of dictionary object
+    static translateAll() {
+        const dictionary = this.dictionaries[this.language()];
         for (let term in dictionary) {
-            let elem = document.querySelector('.' + term) ?? undefined;
-            if (elem !== undefined) {
-                elem.innerText = dictionary[term];
+            let terget = document.querySelector('.' + term) ?? undefined;
+            if (terget !== undefined) {
+                terget.innerText = dictionary[term];
             }
         }
     }

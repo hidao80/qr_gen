@@ -1,6 +1,4 @@
-/**
- * @global multilingualization
- */
+import lang from "./multilingualization.js";
 
 /**
  * sugar-coated syntax to getElementById
@@ -67,7 +65,7 @@ window.onload = () => {
                 text: source,
             });
         } catch (e) {
-            $("#QRCode").html("").append(multilingualization.dict("error-1"));
+            $("#QRCode").html("").append(lang.translate("error-1"));
         }
     });
 
@@ -97,7 +95,7 @@ window.onload = () => {
     })
 
     // multilingualization
-    multilingualization.init();
+    lang.translateAll();
 }
 
 /**
