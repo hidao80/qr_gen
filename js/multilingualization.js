@@ -79,14 +79,13 @@ export default class Multilingualization {
         return this.dictionaries[this.language()][index];
     }
 
-    // Initialization of dictionary object
+    /**
+     * Initialization of dictionary object
+     */
     static translateAll() {
         const dictionary = this.dictionaries[this.language()];
-        for (let term in dictionary) {
-            let terget = document.querySelector('.' + term) ?? undefined;
-            if (terget !== undefined) {
-                terget.innerText = dictionary[term];
-            }
+        for (let elem of document.querySelectorAll('[data-translate]')) {
+            elem.innerHTML = dictionary[elem.dataset.translate];
         }
     }
 }
