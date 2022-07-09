@@ -53,11 +53,11 @@ async function copyUrlWithValues() {
     const elems = Object.setPrototypeOf([...$$('input[type="text"]'), ...$$('input[type="password"]'), ...$$('textarea')], NodeList.prototype);
 
     for (const elem of elems) {
-        if (elem.value) {
+        if (elem?.value) {
             params.push(`${elem.id}=${encodeURIComponent(elem.value)}`);
         }
     }
-    const url = `${location.host}/${location.pathname}?${params.join("&")}`;
+    const url = `${location.host}${location.pathname}?${params.join("&")}`;
     console.log(url);
 
     try {
