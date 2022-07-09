@@ -28,7 +28,10 @@ export default class Multilingualization {
             "dict-17": "Generate!",
             "dict-18": "Download vCard",
             "dict-19": "Shift-JIS mode",
-            "error-1": "The number of characters is over. Please keep it within 600 characters."
+            "dict-20": "URL Copy",
+            "error-1": "The number of characters is over. Please keep it within 600 characters.",
+            "error-2": "Could not copy the URL.",
+            "success-1": "Copied the URL to the clipboard.",
         },
         "ja": {
             "dict-1": "自由な文章",
@@ -48,9 +51,12 @@ export default class Multilingualization {
             "dict-15": "URL(仕事)",
             "dict-16": "URL(プライベート)",
             "dict-17": "生成！",
-            "dict-18": "vCard のダウンロード",
-            "dict-19": "Shift-JIS モード",
-            "error-1": "文字数がオーバーしています。600文字以内でお願いします。"
+            "dict-18": "vCardのダウンロード",
+            "dict-19": "Shift-JISモード",
+            "dict-20": "URLコピー",
+            "error-1": "文字数がオーバーしています。600文字以内でお願いします。",
+            "error-2": "URLをコピーできませんでした。",
+            "success-1": "URLをクリップボードにコピーしました。",
         }
     }
 

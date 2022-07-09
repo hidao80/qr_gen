@@ -45,6 +45,29 @@ function getUrlParams() {
     return object;
 }
 
+/**
+ * Copying URLs with initial values
+ */
+async function copyUrlWithValues() {
+    let params = [];
+    const elems = Object.setPrototypeOf([...$$('input[type="text"]'), ...$$('input[type="password"]'), ...$$('textarea')], NodeList.prototype);
+
+    for (const elem of elems) {
+        if (elem.value) {
+            params.push(`${elem.id}=${encodeURIComponent(elem.value)}`);
+        }
+    }
+    const url = `${location.host}/${location.pathname}?${params.join("&")}`;
+    console.log(url);
+
+    try {
+        await navigator.clipboard.writeText(url);
+        toastr.success(lang.translate('success-1'));
+    } catch (error) {
+        toastr.success(lang.translate('error-2'));
+    }
+}
+
 // After drawing the screen, perform the initial setup.
 window.onload = () => {
     _$("btnGen").addEventListener("click", e => {
@@ -54,7 +77,7 @@ window.onload = () => {
         // Change the value to be retrieved depending on the tab being displayed.
         switch ($$(".nav-link.active")[0].getAttribute("value")) {
             case "free_text":
-                source = _$("text").value;
+                source = encode(_$("text").value);
                 break
 
             case "url":
@@ -84,6 +107,11 @@ window.onload = () => {
         } catch (e) {
             $("#QRCode").html("").append(lang.translate("error-1"));
         }
+    });
+
+    // Copying URLs with initial values
+    _$("btnUrl").addEventListener("click", e => {
+        copyUrlWithValues();
     });
 
     // Download vCard
@@ -123,7 +151,6 @@ window.onload = () => {
             if (_$(key) !== null && _$(key).type?.match(/text|password/)) {
                 _$(key).value = obj[key];
                 console.log(`${key}: ${obj[key]}`);
-                // console.log(_$(key));
             }
         }
     }, 100);
