@@ -28,6 +28,23 @@ function encode(str) {
         : Encoding.convert(str, "UTF-8");
 }
 
+/**
+ * Combine get parameters into an object
+ * @return {object} key-value object for input forms.
+ */
+function getUrlParams() {
+    const params = document.location.search.substring(1).split('&');
+    const object = {};
+    let pair;
+
+    for (const param of params) {
+        pair = param.split("=");
+        object[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+    }
+
+    return object;
+}
+
 // After drawing the screen, perform the initial setup.
 window.onload = () => {
     _$("btnGen").addEventListener("click", e => {
@@ -37,7 +54,7 @@ window.onload = () => {
         // Change the value to be retrieved depending on the tab being displayed.
         switch ($$(".nav-link.active")[0].getAttribute("value")) {
             case "free_text":
-                source = _$("value").value;
+                source = _$("text").value;
                 break
 
             case "url":
@@ -75,14 +92,14 @@ window.onload = () => {
     });
 
     // Tab Switching
-    $$(".nav-link").forEach(nav_elem => {
+    for (const nav_elem of $$(".nav-link")) {
         nav_elem.addEventListener("click", event => {
-            $$(".nav-link").forEach(elem => {
+            for (const elem of $$(".nav-link")) {
                 elem.classList.remove("active")
-            })
-            $$(".tab").forEach(elem => {
+            }
+            for (const elem of $$(".tab")) {
                 elem.classList.add("d-none")
-            })
+            }
             event.target.classList.add("active")
             _$(event.target.getAttribute("value")).classList.remove("d-none")
 
@@ -91,12 +108,45 @@ window.onload = () => {
             } else {
                 _$("btnVcard").disabled = true
             }
-        })
-    })
+        });
+    };
+
+
+
+    // Initialized by URL parameter
+    const obj = getUrlParams();
+
+    // set default value once only
+    // setTimeout is an autocomplete countermeasure
+    setTimeout(() => {
+        for (const key of Object.keys(obj)) {
+            if (_$(key) !== null && _$(key).type?.match(/text|password/)) {
+                _$(key).value = obj[key];
+                console.log(`${key}: ${obj[key]}`);
+                // console.log(_$(key));
+            }
+        }
+    }, 100);
+
+    // tab activate
+    const key = Object.keys(obj)[0];
+    if (key == false) {
+        // nop
+    } else if (key.match(/text/)) {
+        _$("tab_free_text").click();
+    } else if (key.match(/basic-url/)) {
+        _$("tab_url").click();
+    } else if (key.match(/essid|password/)) {
+        _$("tab_wifi").click();
+    } else if (key.match(/first_name|family_name|first_name_kana|family_name_kana|organization|title|tel_voice|tel_fax|email|url_work|url_private/)) {
+        _$("tab_vcard").click();
+    }
+
+
 
     // multilingualization
     lang.translateAll();
-}
+};
 
 /**
  * Generate string for vCard
