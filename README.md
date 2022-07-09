@@ -5,3 +5,5 @@
 # QR Code Generator
 
 Generate QR codes for free writing, URLs, Wifi settings and contacts (vCard format) for iPhone and Android.
+
+The "Copy URL" button allows you to copy a URL with URL parameters to the clipboard that specifies what you are currently typing.
