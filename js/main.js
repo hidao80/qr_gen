@@ -71,10 +71,12 @@ window.onload = () => {
         }
     });
 
-    // Copying URLs with initial values
-    _$("btnUrl").addEventListener("click", e => {
-        copyUrlWithValues();
-    });
+    // The use of the function is discontinued because personal
+    // information remains in the web server's access log.
+    // // Copying URLs with initial values
+    // _$("btnUrl").addEventListener("click", e => {
+    //     copyUrlWithValues();
+    // });
 
     // Download vCard
     _$("btnVcard").addEventListener("click", e => {
