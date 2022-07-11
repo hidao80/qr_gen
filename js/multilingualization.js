@@ -70,10 +70,10 @@ export default class Multilingualization {
      * @returns {string} Current language
      */
     static language() {
-        const lang = (window.navigator.languages && window.navigator.languages[0]) ||
+        const lang = ((window.navigator.languages && window.navigator.languages[0]) ||
             window.navigator.language ||
             window.navigator.userLanguage ||
-            window.navigator.browserLanguage;
+            window.navigator.browserLanguage).slice(0, 2);
 
         // Show English for undefined languages
         return this.dictionaries[lang] ? lang : "en";
