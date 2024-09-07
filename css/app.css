@@ -1,0 +1,20 @@
+:root {
+    color-scheme: light dark;
+    --light-color: #212529;
+    --light-bgcolor: #f6f6f6;
+    --dark-color: #f6f6f6;
+    --dark-bgcolor: #212529;
+    --light-note-footer-color: #888;
+    --dark-note-footer-color: #555;
+}
+
+body {
+    color: light-dark(var(--light-color) var(--dark-color));
+    background-color: light-dark(var(--dark-color) var(--light-color));
+    margin: 2rem;
+}
+
+input.form-control, input.form-control::placeholder, textarea, textarea::placeholder {
+    color: light-dark(var(--light-color) var(--dark-color));
+    background-color: light-dark(var(--dark-color) var(--light-color));
+}
