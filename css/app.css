@@ -18,3 +18,7 @@ input.form-control, input.form-control::placeholder, textarea, textarea::placeho
     color: light-dark(var(--light-color) var(--dark-color));
     background-color: light-dark(var(--dark-color) var(--light-color));
 }
+
+#QRCode {
+    border: 1em solid white;
+}
