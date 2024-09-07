@@ -1,5 +1,6 @@
 [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 [![jQuery](https://img.shields.io/badge/Framework-jQuery-blue.svg)](https://jquery.com/)
+![Dark theme ready](https://img.shields.io/badge/Dark_theme-ready-blue.svg)
 
 [README by English](./README.md)
 
