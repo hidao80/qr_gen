@@ -21,4 +21,5 @@ input.form-control, input.form-control::placeholder, textarea, textarea::placeho
 
 #QRCode {
     border: 1em solid white;
+    background-color: white;
 }
